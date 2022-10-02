@@ -16,8 +16,8 @@ namespace FundooApplication.Controllers
                 this.userBL = userBL;
             }
 
-            //[Route("Register")]
-            [HttpPost("Register")]
+            [Route("Register")]
+            [HttpPost]
             public IActionResult Regispostration(UserRegistration userRegistration)
             {
                 try
