@@ -37,6 +37,37 @@ namespace FundooApplication.Controllers
                     throw;
                 }
             }
+        [HttpPost("Login")]
+        public IActionResult Login(UserLogin userLoginModel)
+        {
+            try
+            {
+                var result = userBL.Login(userLoginModel);
+                if (result != null)
+                {
+                    return this.Ok(new
+                    {
+                        Success = true,
+                        message = "Login Successfull",
+                        token = result
+                    }
+                        );
+                }
+                else
+                {
+                    return this.Unauthorized(new
+                    {
+                        Success = false,
+                        message = "Invalid Email or Password",
+                    });
+                }
+
+            }
+            catch
+            {
+                throw;
+            }
         }
+    }
 }
 
