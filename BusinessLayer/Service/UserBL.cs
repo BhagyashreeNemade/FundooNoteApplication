@@ -24,11 +24,11 @@ namespace BusinessLayer.Service
         {
             try
             {
-                return userInterfaceRL.UserRegitrations(userRegistration);
+                return this.userInterfaceRL.UserRegitrations(userRegistration);
             }
-            catch (Exception e)
+            catch (Exception)
             {
-                throw e;
+                throw;
             }
         }
         public string Login(UserLogin userLogin)
@@ -37,7 +37,41 @@ namespace BusinessLayer.Service
             {
                 return userInterfaceRL.Login(userLogin);
             }
-            catch (Exception ex)
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+        public string GenerateJWTToken(string EmailId)
+        {
+            try
+            {
+                return userInterfaceRL.GenerateJWTToken(EmailId);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+
+        }
+        public string ForgetPassword(string Emailid)
+        {
+            try
+            {
+                return userInterfaceRL.ForgetPassword(Emailid);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+        public bool ResetPassword(string Emailid, string password, string confirmpassword)
+        {
+            try
+            {
+                return userInterfaceRL.ResetPassword(Emailid, password, confirmpassword);
+            }
+            catch (Exception)
             {
                 throw;
             }
