@@ -74,6 +74,7 @@ namespace FundooApplication.Controllers
         [HttpPost("ForgetPassword")]
         public IActionResult ForgetPassword(string email)
         {
+
             try
             {
                 string token = userBL.ForgetPassword(email);
@@ -91,6 +92,7 @@ namespace FundooApplication.Controllers
                 throw;
             }
         }
+        [Authorize]
         [HttpPut("ResetPassword")]
         public IActionResult ResetPassword(string password, string confirmpassword)
         {

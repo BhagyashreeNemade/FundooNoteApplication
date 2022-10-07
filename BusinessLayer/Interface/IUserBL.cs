@@ -10,7 +10,7 @@ namespace BusinessLayer.Interface
     {
         public UserEntity UserRegitrations(UserRegistration userRegistration);
         public string Login(UserLogin userLogin);
-        public string GenerateJWTToken(string Emailid);
+        public string GenerateJWTToken(string Emailid, long UserId);
         public string ForgetPassword(string Emailid);
         public bool ResetPassword(string email, string password, string confirmpassword);
     }

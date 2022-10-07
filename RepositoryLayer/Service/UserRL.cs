@@ -56,7 +56,7 @@ namespace RepositoryLayer.Service
                 var loginData = this.fundooContext.FundooDbTable.FirstOrDefault(x => x.EmailId == userLogin.EmailId && x.Password == userLogin.Password);
                 if (loginData != null)
                 {
-                    var token = GenerateJWTToken(userLogin.EmailId);
+                    var token = GenerateJWTToken(userLogin.EmailId, loginData.UserId);
                     return token;
                 }
                 else
@@ -68,7 +68,7 @@ namespace RepositoryLayer.Service
             }
 
         }
-        public string GenerateJWTToken(string Emailid)
+        public string GenerateJWTToken(string Emailid, long UserId)
         {
             try
             {
@@ -79,7 +79,7 @@ namespace RepositoryLayer.Service
                     Subject = new ClaimsIdentity(new Claim[]
                     {
                         new Claim(ClaimTypes.Email, Emailid),
-                        //new Claim("UserId", userId.ToString())
+                        new Claim("UserId", UserId.ToString())
                     }),
                     Expires = DateTime.UtcNow.AddMinutes(15),
                     SigningCredentials = new SigningCredentials(loginTokenKey, SecurityAlgorithms.HmacSha256Signature)
@@ -100,7 +100,7 @@ namespace RepositoryLayer.Service
                 var result = fundooContext.FundooDbTable.FirstOrDefault(x => x.EmailId == Emailid);
                 if (result != null)
                 {
-                    var token = this.GenerateJWTToken(result.EmailId);
+                    var token = this.GenerateJWTToken(result.EmailId, result.UserId);
                     MSMQModel mSMQModel = new MSMQModel();
                     mSMQModel.sendData2Queue(token);
                     return token.ToString();

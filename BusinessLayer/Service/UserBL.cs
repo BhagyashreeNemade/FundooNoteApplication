@@ -42,11 +42,11 @@ namespace BusinessLayer.Service
                 throw;
             }
         }
-        public string GenerateJWTToken(string EmailId)
+        public string GenerateJWTToken(string EmailId, long UserId)
         {
             try
             {
-                return userInterfaceRL.GenerateJWTToken(EmailId);
+                return userInterfaceRL.GenerateJWTToken(EmailId,UserId);
             }
             catch (Exception)
             {

@@ -42,6 +42,9 @@ namespace FundooApplication
             services.AddControllers();
             services.AddTransient<IUserInterfaceRL, UserRL>();
             services.AddTransient<IUserBL, UserBL>();
+            services.AddTransient<INoteBL, NoteBL>();
+            services.AddTransient<INoteRL, NoteRL>();
+
             services.AddSwaggerGen(c =>
             {
                 var jwtSecurityScheme = new OpenApiSecurityScheme
