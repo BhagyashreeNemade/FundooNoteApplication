@@ -202,7 +202,7 @@ namespace FundooApplication.Controllers
             }
         }
       
-        [HttpPut("Upload")]
+        [HttpPut("UploadImage")]
         public IActionResult UploadImage(long noteid, IFormFile img)
         {
             try

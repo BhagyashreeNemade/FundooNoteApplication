@@ -9,7 +9,7 @@ using System.Security.Claims;
 
 namespace FundooApplication.Controllers
 {
-    [Route("api/[controller]/[action]")]
+    [Route("api/[controller]")]
     [ApiController]
     public class UserController : ControllerBase
     {
@@ -22,7 +22,7 @@ namespace FundooApplication.Controllers
             }
         
        
-            [HttpPost]
+            [HttpPost("Register")]
             public IActionResult Register(UserRegistration userRegistration)
             {
                 try
