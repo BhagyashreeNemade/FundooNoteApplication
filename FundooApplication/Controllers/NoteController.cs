@@ -118,11 +118,11 @@ namespace FundooApplication.Controllers
                 var result = noteBL.IsPinORNot(noteid);
                 if (result != null)
                 {
-                    return this.Ok(new { message = "Note unPinned", Response = result });
+                    return this.Ok(new { message = "Note Pinned Successfully", Response = result });
                 }
                 else
                 {
-                    return this.BadRequest(new { message = "Note Pinned Successfully" });
+                    return this.BadRequest(new { message = "Something Went Wrong" });
                 }
             }
             catch (Exception)
@@ -141,11 +141,11 @@ namespace FundooApplication.Controllers
                 var result = noteBL.IstrashORNot(noteid);
                 if (result != null)
                 {
-                    return this.Ok(new { message = "Note Restored ", Response = result });
+                    return this.Ok(new { message = "Note is in trash ", Response = result });
                 }
                 else
                 {
-                    return this.BadRequest(new { message = "Note is in trash" });
+                    return this.BadRequest(new { message = "Something Went Wrong" });
                 }
             }
             catch (Exception)
@@ -164,11 +164,11 @@ namespace FundooApplication.Controllers
                 var result = noteBL.IsArchiveORNot(noteid);
                 if (result != null)
                 {
-                    return this.Ok(new { message = "Note Unarchived ", Response = result });
+                    return this.Ok(new { message = "Note Archived Successfully ", Response = result });
                 }
                 else
                 {
-                    return this.BadRequest(new { message = "Note Archived Successfully" });
+                    return this.BadRequest(new { message = "Something Went Wrong" });
                 }
             }
             catch (Exception)

@@ -63,11 +63,11 @@ namespace BusinessLayer.Service
                 throw;
             }
         }
-        public NoteEntity IsPinORNot(long noteid)
+        public bool IsPinORNot(long noteid)
         {
             try
             {
-                return this.iNoteRL.IsPinORNot(noteid);
+                return iNoteRL.IsPinORNot(noteid);
             }
             catch (Exception)
             {
@@ -75,11 +75,11 @@ namespace BusinessLayer.Service
                 throw;
             }
         }
-        public NoteEntity IsArchiveORNot(long noteid)
+        public bool IsArchiveORNot(long noteid)
         {
             try
             {
-                return this.iNoteRL.IsArchiveORNot(noteid);
+                return iNoteRL.IsArchiveORNot(noteid);
             }
             catch (Exception)
             {
@@ -87,11 +87,11 @@ namespace BusinessLayer.Service
                 throw;
             }
         }
-        public NoteEntity IstrashORNot(long noteid)
+        public bool IstrashORNot(long noteid)
         {
             try
             {
-                return this.iNoteRL.IstrashORNot(noteid);
+                return iNoteRL.IstrashORNot(noteid);
             }
             catch (Exception)
             {

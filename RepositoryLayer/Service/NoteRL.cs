@@ -127,7 +127,7 @@ namespace RepositoryLayer.Service
                 throw;
             }
         }
-        public NoteEntity IsPinORNot(long noteid)
+        public bool IsPinORNot(long noteid)
         {
             try
             {
@@ -136,13 +136,13 @@ namespace RepositoryLayer.Service
                 {
                     result.IsPin = false;
                     this.fundooContext.SaveChanges();
-                    return result;
+                    return false;
                 }
                 else
                 {
                     result.IsPin = true;
                     this.fundooContext.SaveChanges();
-                    return null;
+                    return true;
                 }
             }
             catch (Exception)
@@ -151,7 +151,7 @@ namespace RepositoryLayer.Service
                 throw;
             }
         }
-        public NoteEntity IsArchiveORNot(long noteid)
+        public bool IsArchiveORNot(long noteid)
         {
             try
             {
@@ -160,11 +160,11 @@ namespace RepositoryLayer.Service
                 {
                     result.IsArchive = false;
                     this.fundooContext.SaveChanges();
-                    return result;
+                    return false;
                 }
                 result.IsArchive = true;
                 this.fundooContext.SaveChanges();
-                return null;
+                return true;
             }
             catch (Exception)
             {
@@ -172,7 +172,7 @@ namespace RepositoryLayer.Service
                 throw;
             }
         }
-        public NoteEntity IstrashORNot(long noteid)
+        public bool IstrashORNot(long noteid)
         {
             try
             {
@@ -181,11 +181,11 @@ namespace RepositoryLayer.Service
                 {
                     result.IsTrash = false;
                     this.fundooContext.SaveChanges();
-                    return result;
+                    return false;
                 }
                 result.IsTrash = true;
                 this.fundooContext.SaveChanges();
-                return null;
+                return true;
             }
             catch (Exception)
             {
