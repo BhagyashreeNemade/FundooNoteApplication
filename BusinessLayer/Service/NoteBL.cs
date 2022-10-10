@@ -1,5 +1,6 @@
 ﻿using BusinessLayer.Interface;
 using CommonLayer.Model;
+using Microsoft.AspNetCore.Http;
 using RepositoryLayer.Entity;
 using RepositoryLayer.Interface;
 using RepositoryLayer.Service;
@@ -59,6 +60,55 @@ namespace BusinessLayer.Service
             }
             catch (Exception)
             {
+                throw;
+            }
+        }
+        public NoteEntity IsPinORNot(long noteid)
+        {
+            try
+            {
+                return this.iNoteRL.IsPinORNot(noteid);
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
+        public NoteEntity IsArchiveORNot(long noteid)
+        {
+            try
+            {
+                return this.iNoteRL.IsArchiveORNot(noteid);
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
+        public NoteEntity IstrashORNot(long noteid)
+        {
+            try
+            {
+                return this.iNoteRL.IstrashORNot(noteid);
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
+        
+        public NoteEntity Color(long noteid, string color)
+        {
+            try
+            {
+                return this.iNoteRL.Color(noteid, color);
+            }
+            catch (Exception)
+            {
+
                 throw;
             }
         }

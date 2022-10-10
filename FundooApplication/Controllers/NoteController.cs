@@ -8,6 +8,7 @@ using System.Linq;
 using System;
 using RepositoryLayer.Context;
 using BusinessLayer.Service;
+using Microsoft.AspNetCore.Http;
 
 namespace FundooApplication.Controllers
 {
@@ -109,7 +110,98 @@ namespace FundooApplication.Controllers
             }
 
         }
+        [HttpPut("Pin")]
+        public IActionResult Ispinornot(long noteid)
+        {
+            try
+            {
+                var result = noteBL.IsPinORNot(noteid);
+                if (result != null)
+                {
+                    return this.Ok(new { message = "Note unPinned", Response = result });
+                }
+                else
+                {
+                    return this.BadRequest(new { message = "Note Pinned Successfully" });
+                }
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
+
+       
+        [HttpPut("Trash")]
+        public IActionResult Istrashornot(long noteid)
+        {
+            try
+            {
+                var result = noteBL.IstrashORNot(noteid);
+                if (result != null)
+                {
+                    return this.Ok(new { message = "Note Restored ", Response = result });
+                }
+                else
+                {
+                    return this.BadRequest(new { message = "Note is in trash" });
+                }
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
+
+       
+        [HttpPut("Archive")]
+        public IActionResult IsArchiveORNot(long noteid)
+        {
+            try
+            {
+                var result = noteBL.IsArchiveORNot(noteid);
+                if (result != null)
+                {
+                    return this.Ok(new { message = "Note Unarchived ", Response = result });
+                }
+                else
+                {
+                    return this.BadRequest(new { message = "Note Archived Successfully" });
+                }
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
+
+
+       
+        [HttpPut("Color")]
+        public IActionResult Color(long noteid, string color)
+        {
+            try
+            {
+                var result = noteBL.Color(noteid, color);
+                if (result != null)
+                {
+                    return this.Ok(new { message = "Color is changed ", Response = result });
+                }
+                else
+                {
+                    return this.BadRequest(new { message = "Unable to change color" });
+                }
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
 
     }
-    }
+}
 

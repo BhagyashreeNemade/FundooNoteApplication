@@ -121,6 +121,91 @@ namespace RepositoryLayer.Service
                 throw;
             }
         }
+        public NoteEntity IsPinORNot(long noteid)
+        {
+            try
+            {
+                NoteEntity result = this.fundooContext.Notes.FirstOrDefault(x => x.NoteID == noteid);
+                if (result.IsPin == true)
+                {
+                    result.IsPin = false;
+                    this.fundooContext.SaveChanges();
+                    return result;
+                }
+                else
+                {
+                    result.IsPin = true;
+                    this.fundooContext.SaveChanges();
+                    return null;
+                }
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
+        public NoteEntity IsArchiveORNot(long noteid)
+        {
+            try
+            {
+                NoteEntity result = this.fundooContext.Notes.FirstOrDefault(x => x.NoteID == noteid);
+                if (result.IsArchive == true)
+                {
+                    result.IsArchive = false;
+                    this.fundooContext.SaveChanges();
+                    return result;
+                }
+                result.IsArchive = true;
+                this.fundooContext.SaveChanges();
+                return null;
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
+        public NoteEntity IstrashORNot(long noteid)
+        {
+            try
+            {
+                NoteEntity result = this.fundooContext.Notes.FirstOrDefault(x => x.NoteID == noteid);
+                if (result.IsTrash == true)
+                {
+                    result.IsTrash = false;
+                    this.fundooContext.SaveChanges();
+                    return result;
+                }
+                result.IsTrash = true;
+                this.fundooContext.SaveChanges();
+                return null;
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
+        public NoteEntity Color(long noteid, string color)
+        {
+            try
+            {
+                NoteEntity note = this.fundooContext.Notes.FirstOrDefault(x => x.NoteID == noteid);
+                if (note.Color != null)
+                {
+                    note.Color = color;
+                    this.fundooContext.SaveChanges();
+                    return note;
+                }
+                return null;
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
 
     }
 }
