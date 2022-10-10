@@ -112,5 +112,17 @@ namespace BusinessLayer.Service
                 throw;
             }
         }
+        public string UploadImage(long noteid, long userId, IFormFile img)
+        {
+            try
+            {
+                return this.iNoteRL.UploadImage(noteid,userId, img);
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
     }
 }

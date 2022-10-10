@@ -201,7 +201,29 @@ namespace FundooApplication.Controllers
                 throw;
             }
         }
+      
+        [HttpPut("Upload")]
+        public IActionResult UploadImage(long noteid, IFormFile img)
+        {
+            try
+            {
+                long userId = Convert.ToInt32(User.Claims.FirstOrDefault(e => e.Type == "UserId").Value);
+                var result = noteBL.UploadImage(noteid,userId, img);
+                if (result != null)
+                {
+                    return this.Ok(new { message = "uploaded ", Response = result });
+                }
+                else
+                {
+                    return this.BadRequest(new { message = "Not uploaded" });
+                }
+            }
+            catch (Exception)
+            {
 
+                throw;
+            }
+        }
     }
 }
 

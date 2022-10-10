@@ -1,4 +1,5 @@
 ﻿using CommonLayer.Model;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using RepositoryLayer.Context;
 using RepositoryLayer.Entity;
@@ -6,7 +7,11 @@ using RepositoryLayer.Interface;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Principal;
 using System.Text;
+using CloudinaryDotNet;
+using CloudinaryDotNet.Actions;
+using Microsoft.AspNetCore.Mvc;
 
 namespace RepositoryLayer.Service
 {
@@ -14,6 +19,7 @@ namespace RepositoryLayer.Service
     {
         FundooContext fundooContext;
         private readonly IConfiguration config;
+       
         public NoteRL(FundooContext fundooContext, IConfiguration config)
         {
             this.fundooContext = fundooContext;
@@ -206,6 +212,39 @@ namespace RepositoryLayer.Service
                 throw;
             }
         }
+        public string UploadImage(long noteid, long userId,IFormFile img)
+        {
+            try
+            {
+                var result = this.fundooContext.Notes.FirstOrDefault(e => e.NoteID == noteid && e.UserId==userId);
+                if (result != null)
+                {
+                    Account account = new Account(
+                     this.config["CloudinarySettings:CloudName"],
+                       this.config["CloudinarySettings:ApiKey"],
+                        this.config["CloudinarySettings:ApiSecret"]);
 
+                    Cloudinary cloudinary = new Cloudinary(account);
+                    var uploadParams = new ImageUploadParams()
+                    {
+                        File = new FileDescription(img.FileName, img.OpenReadStream()),
+                    };
+                    var uploadResult = cloudinary.Upload(uploadParams);
+                    string imagePath = uploadResult.Url.ToString();
+                    result.Image = imagePath;
+                    fundooContext.SaveChanges();
+                    return "Image uploaded successfully";
+                }
+                else
+                {
+                    return null;
+                }
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
     }
 }

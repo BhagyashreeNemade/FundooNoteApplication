@@ -18,6 +18,7 @@ namespace RepositoryLayer.Interface
         public NoteEntity IsArchiveORNot(long noteid);
         public NoteEntity IstrashORNot(long noteid);
         public NoteEntity Color(long noteid, string color);
+        public string UploadImage(long noteid, long userId, IFormFile img);
 
     }
 }
