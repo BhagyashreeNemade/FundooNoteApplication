@@ -29,5 +29,17 @@ namespace BusinessLayer.Service
                 throw;
             }
         }
+        public bool Remove(long collabid)
+        {
+            try
+            {
+                return this.iCollabRL.Remove(collabid);
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
     }
 }

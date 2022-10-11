@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using RepositoryLayer.Context;
 using System.Linq;
 using System;
+using RepositoryLayer.Service;
 
 namespace FundooApplication.Controllers
 {
@@ -42,6 +43,25 @@ namespace FundooApplication.Controllers
             catch (Exception ex)
             {
                 throw;
+            }
+        }
+        [HttpDelete("Remove")]
+        public IActionResult Remove(long collabid)
+        {
+            try
+            {
+                if (collabBL.Remove(collabid))
+                {
+                    return this.Ok(new { Success = true, message = "Deleted Successfully" });
+                }
+                else
+                {
+                    return this.BadRequest(new { Success = false, message = "Unable to Delete" });
+                }
+            }
+            catch (Exception ex)
+            {
+                return this.BadRequest(new { Success = false, message = ex.Message });
             }
         }
     }

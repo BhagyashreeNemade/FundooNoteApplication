@@ -5,6 +5,7 @@ using RepositoryLayer.Entity;
 using RepositoryLayer.Interface;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using System.Xml.Linq;
 
@@ -42,6 +43,24 @@ namespace RepositoryLayer.Service
             catch (Exception)
             {
 
+                throw;
+            }
+        }
+        public bool Remove(long collabid)
+        {
+            try
+            {
+                var result = this.fundooContext.CollabTable.FirstOrDefault(x => x.CollabID == collabid);
+                fundooContext.Remove(result);
+                int deletednote = this.fundooContext.SaveChanges();
+                if (deletednote > 0)
+                {
+                    return true;
+                }
+                return false;
+            }
+            catch (Exception)
+            {
                 throw;
             }
         }
