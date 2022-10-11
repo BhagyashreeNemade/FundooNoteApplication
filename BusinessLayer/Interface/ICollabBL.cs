@@ -10,5 +10,6 @@ namespace BusinessLayer.Interface
     {
         public CollabEntity AddCollab(long noteid,long userid,string email);
         public bool Remove(long collabid);
+        List<CollabEntity> GetAllByNoteID(long noteid);
     }
 }

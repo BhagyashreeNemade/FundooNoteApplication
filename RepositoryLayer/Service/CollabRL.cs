@@ -64,5 +64,9 @@ namespace RepositoryLayer.Service
                 throw;
             }
         }
+        public List<CollabEntity> GetAllByNoteID(long noteid)
+        {
+            return fundooContext.CollabTable.Where(n => n.NoteID == noteid).ToList();
+        }
     }
 }

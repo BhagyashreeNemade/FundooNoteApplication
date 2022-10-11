@@ -41,5 +41,17 @@ namespace BusinessLayer.Service
                 throw;
             }
         }
+        public List<CollabEntity> GetAllByNoteID(long noteid)
+        {
+            try
+            {
+                return this.iCollabRL.GetAllByNoteID(noteid);
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
     }
 }

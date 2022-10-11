@@ -7,6 +7,9 @@ using RepositoryLayer.Context;
 using System.Linq;
 using System;
 using RepositoryLayer.Service;
+using RepositoryLayer.Interface;
+using RepositoryLayer.Entity;
+using System.Collections.Generic;
 
 namespace FundooApplication.Controllers
 {
@@ -64,5 +67,18 @@ namespace FundooApplication.Controllers
                 return this.BadRequest(new { Success = false, message = ex.Message });
             }
         }
+        [HttpGet("GetAllByNoteID")]
+        public List<CollabEntity> GetAllByNoteID(long noteid)
+        {
+            try
+            {
+                return collabBL.GetAllByNoteID(noteid);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
     }
+    
 }
