@@ -12,7 +12,8 @@ namespace RepositoryLayer.Entity
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public long CollabID { get; set; }
         public string CollabEmail { get; set; }
-    
+        public DateTime? Modifiedat { get; set; }
+
 
         [ForeignKey("FundooDbTable")]
         public long UserId { get; set; }

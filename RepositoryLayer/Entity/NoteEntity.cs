@@ -25,6 +25,6 @@ namespace RepositoryLayer.Entity
 
         [ForeignKey("FundooDbTable")]
         public long UserId { get; set; }
-        public virtual NoteEntity noteEntity { get; set; }
+        public virtual UserEntity user { get; set; }
     }
 }
