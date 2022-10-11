@@ -23,7 +23,7 @@ namespace RepositoryLayer.Entity
         public DateTime? Createat { get; set; }
         public DateTime? Modifiedat { get; set; }
 
-        [ForeignKey("noteEntity")]
+        [ForeignKey("FundooDbTable")]
         public long UserId { get; set; }
         public virtual NoteEntity noteEntity { get; set; }
     }
