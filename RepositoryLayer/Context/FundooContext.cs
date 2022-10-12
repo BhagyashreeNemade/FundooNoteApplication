@@ -15,5 +15,6 @@ namespace RepositoryLayer.Context
         public DbSet<UserEntity> FundooDbTable { get; set; }
         public DbSet<NoteEntity> Notes { get; set; }
         public DbSet<CollabEntity> CollabTable{ get; set; }
+        public DbSet<LabelEntity> LabelsTable { get; set; }
     }
 }
