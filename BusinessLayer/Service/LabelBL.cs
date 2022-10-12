@@ -26,5 +26,17 @@ namespace BusinessLayer.Service
                 throw;
             }
         }
+        public List<LabelEntity> GetlabelsByNoteid(long noteid, long userid)
+        {
+            try
+            {
+                return this.labelbl.GetlabelsByNoteid(noteid, userid);
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
     }
 }

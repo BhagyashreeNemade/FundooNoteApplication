@@ -4,6 +4,7 @@ using RepositoryLayer.Entity;
 using RepositoryLayer.Interface;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 
 namespace RepositoryLayer.Service
@@ -40,5 +41,17 @@ namespace RepositoryLayer.Service
                 throw;
             }
         }
+        public List<LabelEntity> GetlabelsByNoteid(long noteid, long userid)
+        {
+            try
+            {
+                var result = context.LabelsTable.Where(e => e.NoteID == noteid && e.UserId == userid).ToList();
+            return result;
+             }
+            catch (Exception)
+            {
+                throw;
+            }
+}
     }
 }
