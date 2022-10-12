@@ -72,5 +72,20 @@ namespace RepositoryLayer.Service
                 throw;
             }
         }
+        public List<LabelEntity> RenameLabel(long userID, string oldLabelName, string labelName)
+        {
+            IEnumerable<LabelEntity> labels;
+            labels = context.LabelsTable.Where(x => x.UserId == userID && x.LabelName == oldLabelName).ToList();
+            if (labels != null)
+            {
+                foreach (var newlabel in labels)
+                {
+                    newlabel.LabelName = labelName;
+                }
+                context.SaveChanges();
+                return (List<LabelEntity>)labels;
+            }
+            return null;
+        }
     }
 }

@@ -11,5 +11,6 @@ namespace RepositoryLayer.Interface
         public List<LabelEntity> GetlabelsByNoteid(long noteid, long userid);
 
         public bool RemoveLabel(long userID, string labelName);
+        public List<LabelEntity> RenameLabel(long userID, string oldLabelName, string labelName);
     }
 }

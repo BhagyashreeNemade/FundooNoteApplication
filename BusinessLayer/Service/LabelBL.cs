@@ -51,5 +51,18 @@ namespace BusinessLayer.Service
             }
 
         }
+        public List<LabelEntity> RenameLabel(long userID, string oldLabelName, string labelName)
+        {
+            try
+            {
+                return this.labelbl.RenameLabel(userID, oldLabelName, labelName);
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+
+        }
     }
 }

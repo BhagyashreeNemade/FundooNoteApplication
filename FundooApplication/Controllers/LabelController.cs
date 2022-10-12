@@ -92,6 +92,27 @@ namespace FundooApplication.Controllers
                 throw;
             }
         }
+        [HttpPut("Rename")]
+        public IActionResult RenameLabel(string lableName, string newLabelName)
+        {
+            try
+            {
+                long userID = Convert.ToInt32(User.Claims.FirstOrDefault(x => x.Type == "UserId").Value);
+                var result = lables.RenameLabel(userID, lableName, newLabelName);
+                if (result != null)
+                {
+                    return this.Ok(new { success = true, message = "Label renamed successfully", Response = result });
+                }
+                else
+                {
+                    return this.BadRequest(new { success = false, message = "Unable to rename" });
+                }
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
     }
     
 }
