@@ -4,6 +4,7 @@ using RepositoryLayer.Entity;
 using RepositoryLayer.Interface;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 
 namespace RepositoryLayer.Service
@@ -33,6 +34,37 @@ namespace RepositoryLayer.Service
                 }
                 return null;
 
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
+        public List<LabelEntity> GetlabelsByNoteid(long noteid, long userid)
+        {
+            try
+            {
+                var result = context.LabelsTable.Where(e => e.NoteID == noteid && e.UserId == userid).ToList();
+            return result;
+             }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+        public bool RemoveLabel(long userID, string labelName)
+        {
+            try
+            {
+                var result = this.context.LabelsTable.FirstOrDefault(x => x.UserId == userID && x.LabelName == labelName);
+                if (result != null)
+                {
+                    context.Remove(result);
+                    context.SaveChanges();
+                    return true;
+                }
+                return false;
             }
             catch (Exception)
             {

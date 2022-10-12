@@ -8,5 +8,8 @@ namespace RepositoryLayer.Interface
     public interface ILabelRL
     {
         public LabelEntity Addlabel(long noteid, long userid, string labels);
+        public List<LabelEntity> GetlabelsByNoteid(long noteid, long userid);
+
+        public bool RemoveLabel(long userID, string labelName);
     }
 }
