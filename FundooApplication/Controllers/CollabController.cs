@@ -10,6 +10,12 @@ using RepositoryLayer.Service;
 using RepositoryLayer.Interface;
 using RepositoryLayer.Entity;
 using System.Collections.Generic;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Caching.Distributed;
+using Newtonsoft.Json;
+using System.Text;
+using System.Threading.Tasks;
+using Microsoft.Extensions.Caching.Memory;
 
 namespace FundooApplication.Controllers
 {
@@ -20,12 +26,14 @@ namespace FundooApplication.Controllers
     {
         readonly ICollabBL collabBL;
        
+    
         public CollabController(ICollabBL collabBL)
         {
             this.collabBL = collabBL;
             
+
         }
-        [HttpPost("AddCollaborator")]
+        [HttpPost("Add")]
         public IActionResult AddCollab(long noteid, string email)
         {
             try
@@ -67,18 +75,36 @@ namespace FundooApplication.Controllers
                 return this.BadRequest(new { Success = false, message = ex.Message });
             }
         }
-        [HttpGet("GetAllByNoteID")]
-        public List<CollabEntity> GetAllByNoteID(long noteid)
+        [HttpGet("GetDetails")]
+        public IActionResult RetriveDetails(long noteId)
         {
             try
             {
-                return collabBL.GetAllByNoteID(noteid);
+                var result = collabBL.RetriveDetails(noteId);
+                if (!result.Equals(null) && !result.Count.Equals(0))
+                {
+                    return this.Ok(new
+                    {
+                        success = true,
+                        message = "Collaborator Added ",
+                        data = result
+                    });
+                }
+                else
+                {
+                    return this.BadRequest(new
+                    {
+                        success = false,
+                        message = "Data Not Found"
+                    });
+                }
             }
             catch (Exception)
             {
                 throw;
             }
         }
+        
     }
     
 }

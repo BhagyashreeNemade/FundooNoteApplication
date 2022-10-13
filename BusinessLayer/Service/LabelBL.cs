@@ -38,11 +38,11 @@ namespace BusinessLayer.Service
                 throw;
             }
         }
-        public bool RemoveLabel(long userID, string labelName)
+        public bool RemoveLabel(long userID, long labelid)
         {
             try
             {
-                return this.labelbl.RemoveLabel(userID, labelName);
+                return this.labelbl.RemoveLabel(userID, labelid);
             }
             catch (Exception)
             {
@@ -51,7 +51,7 @@ namespace BusinessLayer.Service
             }
 
         }
-        public List<LabelEntity> RenameLabel(long userID, string oldLabelName, string labelName)
+        public bool RenameLabel(long userID, string oldLabelName, string labelName)
         {
             try
             {

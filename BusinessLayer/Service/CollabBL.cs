@@ -41,15 +41,14 @@ namespace BusinessLayer.Service
                 throw;
             }
         }
-        public List<CollabEntity> GetAllByNoteID(long noteid)
+        public List<CollabEntity> RetriveDetails(long lableId)
         {
             try
             {
-                return this.iCollabRL.GetAllByNoteID(noteid);
+                return this.iCollabRL.RetriveDetails(lableId);
             }
             catch (Exception)
             {
-
                 throw;
             }
         }

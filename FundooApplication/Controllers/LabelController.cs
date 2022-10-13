@@ -5,6 +5,13 @@ using System.Linq;
 using System;
 using RepositoryLayer.Entity;
 using System.Collections.Generic;
+using Microsoft.Extensions.Caching.Distributed;
+using Newtonsoft.Json;
+using System.Text;
+using System.Threading.Tasks;
+using Microsoft.Extensions.Caching.Memory;
+using RepositoryLayer.Context;
+using Microsoft.EntityFrameworkCore;
 
 namespace FundooApplication.Controllers
 {
@@ -14,10 +21,14 @@ namespace FundooApplication.Controllers
     public class LabelController : ControllerBase
     {
         ILabelBL lables;
+       
+        
+
 
         public LabelController(ILabelBL lables)
         {
             this.lables = lables;
+           
         }
 
         [HttpPost("Add")]
@@ -41,7 +52,7 @@ namespace FundooApplication.Controllers
                 return this.BadRequest(new { Success = false, message = ex.Message });
             }
         }
-        [HttpGet("ByNoteId")]
+        [HttpGet("Get")]
         public ActionResult<LabelEntity> GetByNoteid(long noteid)
         {
             try
@@ -72,12 +83,12 @@ namespace FundooApplication.Controllers
             }
         }
         [HttpDelete("Remove")]
-        public IActionResult RemoveLabel(string lableName)
+        public IActionResult RemoveLabel(long labelid)
         {
             try
             {
                 long userID = Convert.ToInt32(User.Claims.FirstOrDefault(e => e.Type == "UserId").Value);
-                if (lables.RemoveLabel(userID, lableName))
+                if (lables.RemoveLabel(userID, labelid))
                 {
                     return this.Ok(new { success = true, message = "Label removed successfully" });
                 }
@@ -113,6 +124,7 @@ namespace FundooApplication.Controllers
                 throw;
             }
         }
+        
     }
     
 }

@@ -9,6 +9,12 @@ using System;
 using RepositoryLayer.Context;
 using BusinessLayer.Service;
 using Microsoft.AspNetCore.Http;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Caching.Distributed;
+using Newtonsoft.Json;
+using System.Text;
+using System.Threading.Tasks;
+using Microsoft.Extensions.Caching.Memory;
 
 namespace FundooApplication.Controllers
 {
@@ -19,12 +25,19 @@ namespace FundooApplication.Controllers
         {
             INoteBL noteBL;
             FundooContext context;
-            public NoteController(INoteBL noteBL, FundooContext context)
+        private readonly IMemoryCache memoryCache;
+       
+        private readonly IDistributedCache distributedCache;
+       
+
+        public NoteController(INoteBL noteBL, FundooContext context, IMemoryCache memoryCache, IDistributedCache distributedCache)
             {
                 this.noteBL = noteBL;
                 this.context = context;
-            }
-        [HttpGet("GetNotes")]
+            this.memoryCache = memoryCache;
+            this.distributedCache = distributedCache;
+        }
+        [HttpGet("Get")]
         public IActionResult GetNotes()
         {
             try
@@ -40,7 +53,7 @@ namespace FundooApplication.Controllers
             }
         }
         //[Authorize]
-        [HttpPost("AddNote")]
+        [HttpPost("Add")]
             public IActionResult AddNotes(NoteModel addnote)
             {
                 try
@@ -63,7 +76,7 @@ namespace FundooApplication.Controllers
                     throw;
                 }
             }
-        [HttpPut("UpdateNotes")]
+        [HttpPut("Update")]
         public IActionResult UpdateNotes(long noteid, NoteModel node)
         {
             try
@@ -87,7 +100,7 @@ namespace FundooApplication.Controllers
 
         }
 
-        [HttpDelete("DeleteNotes")]
+        [HttpDelete("Delete")]
         public IActionResult DeleteNotes(long noteid)
         {
             try
@@ -223,6 +236,30 @@ namespace FundooApplication.Controllers
 
                 throw;
             }
+        }
+        [HttpGet("RedisCache")]
+        public async Task<IActionResult> GetAllNotesUsingRedisCache()
+        {
+            var cacheKey = "NoteList";
+            string serializedNotesList;
+            var NotesList = new List<NoteEntity>();
+            var redisNotesList = await distributedCache.GetAsync(cacheKey);
+            if (redisNotesList != null)
+            {
+                serializedNotesList = Encoding.UTF8.GetString(redisNotesList);
+                NotesList = JsonConvert.DeserializeObject<List<NoteEntity>>(serializedNotesList);
+            }
+            else
+            {
+                NotesList = await context.Notes.ToListAsync();
+                serializedNotesList = JsonConvert.SerializeObject(NotesList);
+                redisNotesList = Encoding.UTF8.GetBytes(serializedNotesList);
+                var options = new DistributedCacheEntryOptions()
+                    .SetAbsoluteExpiration(DateTime.Now.AddMinutes(10))
+                    .SetSlidingExpiration(TimeSpan.FromMinutes(2));
+                await distributedCache.SetAsync(cacheKey, redisNotesList, options);
+            }
+            return Ok(NotesList);
         }
     }
 }

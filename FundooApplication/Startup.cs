@@ -40,6 +40,7 @@ namespace FundooApplication
 
             services.AddDbContext<FundooContext>(opts => opts.UseSqlServer(Configuration["ConnectionString:FundooDB"]));
             services.AddControllers();
+            services.AddMemoryCache();
             services.AddTransient<IUserInterfaceRL, UserRL>();
             services.AddTransient<IUserBL, UserBL>();
             services.AddTransient<INoteBL, NoteBL>();
@@ -48,9 +49,14 @@ namespace FundooApplication
             services.AddTransient<ICollabRL, CollabRL>();
             services.AddTransient<ILabelBL, LabelBL>();
             services.AddTransient<ILabelRL, LabelRL>();
+            services.AddStackExchangeRedisCache(options =>
+            {
+                options.Configuration = "localhost:6379";
+            });
 
             services.AddSwaggerGen(c =>
             {
+                c.SwaggerDoc("v1", new OpenApiInfo { Title = "Welcome to FundooNotes" });
                 var jwtSecurityScheme = new OpenApiSecurityScheme
                 {
                     Scheme = "bearer",
@@ -100,7 +106,7 @@ namespace FundooApplication
             app.UseSwagger();
             app.UseSwaggerUI(c =>
             {
-                c.SwaggerEndpoint("/swagger/v1/swagger.json", "Showing Api V1");
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "FundooNotes");
             });
             if (env.IsDevelopment())
             {

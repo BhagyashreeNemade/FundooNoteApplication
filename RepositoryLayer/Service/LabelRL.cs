@@ -46,18 +46,18 @@ namespace RepositoryLayer.Service
             try
             {
                 var result = context.LabelsTable.Where(e => e.NoteID == noteid && e.UserId == userid).ToList();
-            return result;
-             }
+                return result;
+            }
             catch (Exception)
             {
                 throw;
             }
         }
-        public bool RemoveLabel(long userID, string labelName)
+        public bool RemoveLabel(long userID, long labelid)
         {
             try
             {
-                var result = this.context.LabelsTable.FirstOrDefault(x => x.UserId == userID && x.LabelName == labelName);
+                var result = this.context.LabelsTable.FirstOrDefault(x => x.UserId == userID && x.LabelId == labelid);
                 if (result != null)
                 {
                     context.Remove(result);
@@ -72,20 +72,27 @@ namespace RepositoryLayer.Service
                 throw;
             }
         }
-        public List<LabelEntity> RenameLabel(long userID, string oldLabelName, string labelName)
+        public bool RenameLabel(long userID, string oldLabelName, string newlabelName)
         {
-            IEnumerable<LabelEntity> labels;
-            labels = context.LabelsTable.Where(x => x.UserId == userID && x.LabelName == oldLabelName).ToList();
-            if (labels != null)
+            try
             {
-                foreach (var newlabel in labels)
+
+                var result = context.LabelsTable.Where(x => x.UserId == userID && x.LabelName == oldLabelName).FirstOrDefault();
+                if (result != null)
                 {
-                    newlabel.LabelName = labelName;
+                    result.LabelName = newlabelName;
+                    context.SaveChanges();
+                    return true;
                 }
-                context.SaveChanges();
-                return (List<LabelEntity>)labels;
+                else
+                {
+                    return false;
+                }
             }
-            return null;
+            catch (Exception)
+            {
+                throw;
+            }
         }
     }
 }
