@@ -25,12 +25,16 @@ namespace FundooApplication.Controllers
     public class CollabController : ControllerBase
     {
         readonly ICollabBL collabBL;
-       
-    
-        public CollabController(ICollabBL collabBL)
+        private readonly IMemoryCache memoryCache;
+        FundooContext context;
+        private readonly IDistributedCache distributedCache;
+
+        public CollabController(ICollabBL collabBL, IMemoryCache memoryCache, FundooContext context, IDistributedCache distributedCache)
         {
             this.collabBL = collabBL;
-            
+            this.memoryCache = memoryCache;
+            this.context = context;
+            this.distributedCache = distributedCache;
 
         }
         [HttpPost("Add")]
@@ -104,7 +108,30 @@ namespace FundooApplication.Controllers
                 throw;
             }
         }
-        
+        [HttpGet("RedisCache")]
+        public async Task<IActionResult> GetAllCollabsUsingRedisCache()
+        {
+            var cacheKey = "CollabList";
+            string serializedCollabList;
+            var CollabList = new List<CollabEntity>();
+            var redisCollabList = await distributedCache.GetAsync(cacheKey);
+            if (redisCollabList != null)
+            {
+                serializedCollabList = Encoding.UTF8.GetString(redisCollabList);
+                CollabList = JsonConvert.DeserializeObject<List<CollabEntity>>(serializedCollabList);
+            }
+            else
+            {
+                CollabList = await context.CollabTable.ToListAsync();
+                serializedCollabList = JsonConvert.SerializeObject(CollabList);
+                redisCollabList = Encoding.UTF8.GetBytes(serializedCollabList);
+                var options = new DistributedCacheEntryOptions()
+                    .SetAbsoluteExpiration(DateTime.Now.AddMinutes(10))
+                    .SetSlidingExpiration(TimeSpan.FromMinutes(2));
+                await distributedCache.SetAsync(cacheKey, redisCollabList, options);
+            }
+            return Ok(CollabList);
+        }
     }
-    
+
 }
