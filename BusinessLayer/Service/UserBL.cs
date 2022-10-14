@@ -35,7 +35,7 @@ namespace BusinessLayer.Service
         {
             try
             {
-                return userInterfaceRL.Login(userLogin);
+                return this.userInterfaceRL.Login(userLogin);
             }
             catch (Exception)
             {

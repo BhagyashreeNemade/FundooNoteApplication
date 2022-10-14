@@ -46,11 +46,14 @@ namespace FundooApplication.Controllers
         [HttpPost("Login")]
         public IActionResult Login(UserLogin userLogin)
         {
+           
             try
             {
                 var result = userBL.Login(userLogin);
+               
                 if (result != null)
                 {
+                    
                     return this.Ok(new
                     {
                         Success = true,
@@ -63,6 +66,7 @@ namespace FundooApplication.Controllers
                 {
                     return BadRequest(new { Success = false, message = "login Unsucessfull" });
                 }
+                
 
             }
             catch (Exception ex)

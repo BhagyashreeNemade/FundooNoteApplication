@@ -32,7 +32,7 @@ namespace RepositoryLayer.Service
                 userEntity.FirstName = userRegistration.FirstName;
                 userEntity.LastName = userRegistration.LastName;
                 userEntity.EmailId = userRegistration.EmailId;
-                userEntity.Password = userRegistration.Password;
+                userEntity.Password = EncryptPass(userRegistration.Password);
                 fundooContext.Add(userEntity);
                 int result = fundooContext.SaveChanges();
                 if (result > 0)
@@ -49,14 +49,51 @@ namespace RepositoryLayer.Service
                 throw;
             }
          }
+        public string EncryptPass(string password)
+        {
+            try
+            {
+                string msg = "";
+                byte[] encode = new byte[password.Length];
+                encode = Encoding.UTF8.GetBytes(password);
+                msg = Convert.ToBase64String(encode);
+                return msg;
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
+        public string Decrpt(string encodedData)
+        {
+            try
+            {
+                UTF8Encoding encoder = new UTF8Encoding();
+                Decoder utf8Decode = encoder.GetDecoder();
+                byte[] todecode_byte = Convert.FromBase64String(encodedData);
+                int charCount = utf8Decode.GetCharCount(todecode_byte, 0, todecode_byte.Length);
+                char[] decoded_char = new char[charCount];
+                utf8Decode.GetChars(todecode_byte, 0, todecode_byte.Length, decoded_char, 0);
+                string result = new string(decoded_char);
+                return result;
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
         public string Login(UserLogin userLogin)
         {
             try
             {
-                var loginData = this.fundooContext.FundooDbTable.FirstOrDefault(x => x.EmailId == userLogin.EmailId && x.Password == userLogin.Password);
-                if (loginData != null)
+                UserEntity user = new UserEntity();
+                user = this.fundooContext.FundooDbTable.FirstOrDefault(x => x.EmailId == userLogin.EmailId);
+                string dPass = Decrpt(user.Password);
+                if (dPass == userLogin.Password && user != null)
                 {
-                    var token = GenerateJWTToken(userLogin.EmailId, loginData.UserId);
+                    var token = this.GenerateJWTToken(userLogin.EmailId, user.UserId);
                     return token;
                 }
                 else
