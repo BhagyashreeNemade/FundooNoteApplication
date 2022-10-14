@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Security.Claims;
 
@@ -16,10 +17,14 @@ namespace FundooApplication.Controllers
         private readonly IConfiguration _configuration;
 
             private readonly IUserBL userBL;
-            public UserController(IUserBL userBL)
+        private readonly ILogger<UserController> logger;
+
+
+        public UserController(IUserBL userBL, ILogger<UserController> logger)
             {
                 this.userBL = userBL;
-            }
+            this.logger = logger;
+        }
         
        
             [HttpPost("Register")]
@@ -53,7 +58,7 @@ namespace FundooApplication.Controllers
                
                 if (result != null)
                 {
-                    
+                    logger.LogInformation("You have logged in sucessfully");
                     return this.Ok(new
                     {
                         Success = true,
@@ -64,6 +69,7 @@ namespace FundooApplication.Controllers
                 }
                 else
                 {
+                    logger.LogInformation("You have logged in unsucessfull");
                     return BadRequest(new { Success = false, message = "login Unsucessfull" });
                 }
                 
@@ -71,7 +77,7 @@ namespace FundooApplication.Controllers
             }
             catch (Exception ex)
             {
-
+                logger.LogError(ex.ToString());
                 throw ex.InnerException;
             }
         }
