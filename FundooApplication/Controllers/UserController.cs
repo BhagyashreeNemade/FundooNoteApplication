@@ -35,15 +35,18 @@ namespace FundooApplication.Controllers
                     var result = userBL.UserRegitrations(userRegistration);
                     if (result != null)
                     {
-                        return this.Ok(new { success = true, message = "User Registration Succesfull", data = result });
+                    logger.LogInformation("User Registration Succesfull");
+                    return this.Ok(new { success = true, message = "User Registration Succesfull", data = result });
                     }
                     else
                     {
-                        return this.BadRequest(new { success = false, message = "User Registration UnSuccesfull" });
+                    logger.LogInformation("User Registration UnSuccesfull");
+                    return this.BadRequest(new { success = false, message = "User Registration UnSuccesfull" });
                     }
                 }
             catch (Exception ex)
             {
+                logger.LogError(ex.ToString());
                 return this.BadRequest(new { Success = false, message = ex.Message });
             }
         }
@@ -90,15 +93,18 @@ namespace FundooApplication.Controllers
                 string token = userBL.ForgetPassword(email);
                 if (token != null)
                 {
+                    logger.LogInformation("link is sent to email");
                     return Ok(new { success = true, Message = "Please check your Email.Token sent succesfully." });
                 }
                 else
                 {
+                    logger.LogInformation("Email not registered");
                     return this.BadRequest(new { Success = false, Message = "Email not registered" });
                 }
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                logger.LogError(ex.ToString());
                 throw;
             }
         }
@@ -112,6 +118,7 @@ namespace FundooApplication.Controllers
                 var user = userBL.ResetPassword(email, password, confirmpassword);
                 if (!user)
                 {
+                    logger.LogInformation("enter valid password");
                     return this.BadRequest(new { success = false, message = "enter valid password" });
 
                 }
@@ -120,6 +127,7 @@ namespace FundooApplication.Controllers
 
                 else
                 {
+                    logger.LogInformation("reset password is successful");
                     return this.Ok(new { success = true, message = "reset password is successful" });
                 }
 
@@ -127,9 +135,9 @@ namespace FundooApplication.Controllers
 
 
             }
-            catch (System.Exception)
+            catch (System.Exception ex)
             {
-
+                logger.LogError(ex.ToString());
                 throw;
             }
         }
