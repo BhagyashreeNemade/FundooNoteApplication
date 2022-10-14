@@ -16,6 +16,7 @@ using Newtonsoft.Json;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Caching.Memory;
+using Microsoft.Extensions.Logging;
 
 namespace FundooApplication.Controllers
 {
@@ -28,14 +29,15 @@ namespace FundooApplication.Controllers
         private readonly IMemoryCache memoryCache;
         FundooContext context;
         private readonly IDistributedCache distributedCache;
+        private readonly ILogger<CollabController> logger;
 
-
-        public CollabController(ICollabBL collabBL, IMemoryCache memoryCache, FundooContext context, IDistributedCache distributedCache)
+        public CollabController(ICollabBL collabBL, IMemoryCache memoryCache, FundooContext context, IDistributedCache distributedCache, ILogger<CollabController> logger)
         {
             this.collabBL = collabBL;
             this.memoryCache = memoryCache;
             this.context = context;
             this.distributedCache = distributedCache;
+            this.logger = logger;
 
         }
         [HttpPost("Add")]
@@ -49,15 +51,18 @@ namespace FundooApplication.Controllers
                 var result = collabBL.AddCollab(noteid, userid, email);
                 if (result != null)
                 {
+                    logger.LogInformation("Collaborator Added Successfully");
                     return this.Ok(new { Success = true, message = "Collaborator Added Successfully", Response = result });
                 }
                 else
                 {
-                    return this.BadRequest(new { Success = false, message = "Unable to add note" });
+                    logger.LogInformation("Unable to add Collaborator");
+                    return this.BadRequest(new { Success = false, message = "Unable to add Collaborator" });
                 }
             }
             catch (Exception ex)
             {
+                logger.LogError(ex.ToString());
                 throw;
             }
         }
@@ -68,15 +73,18 @@ namespace FundooApplication.Controllers
             {
                 if (collabBL.Remove(collabid))
                 {
+                    logger.LogInformation("Deleted Successfully");
                     return this.Ok(new { Success = true, message = "Deleted Successfully" });
                 }
                 else
                 {
+                    logger.LogInformation("Unable to Delete");
                     return this.BadRequest(new { Success = false, message = "Unable to Delete" });
                 }
             }
             catch (Exception ex)
             {
+                logger.LogError(ex.ToString());
                 return this.BadRequest(new { Success = false, message = ex.Message });
             }
         }
@@ -88,15 +96,18 @@ namespace FundooApplication.Controllers
                 var result = collabBL.RetriveDetails(noteId);
                 if (!result.Equals(null) && !result.Count.Equals(0))
                 {
+                    logger.LogInformation("Retrive collaborator sucessfully");
                     return this.Ok(new
                     {
+
                         success = true,
-                        message = "Collaborator Added ",
+                        message = "Retrive collaborator sucessfully",
                         data = result
                     });
                 }
                 else
                 {
+                    logger.LogInformation("Data Not Found");
                     return this.BadRequest(new
                     {
                         success = false,
@@ -104,8 +115,9 @@ namespace FundooApplication.Controllers
                     });
                 }
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                logger.LogError(ex.ToString());
                 throw;
             }
         }
