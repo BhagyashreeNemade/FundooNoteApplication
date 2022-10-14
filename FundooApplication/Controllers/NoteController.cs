@@ -15,6 +15,7 @@ using Newtonsoft.Json;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Caching.Memory;
+using Microsoft.Extensions.Logging;
 
 namespace FundooApplication.Controllers
 {
@@ -28,27 +29,38 @@ namespace FundooApplication.Controllers
         private readonly IMemoryCache memoryCache;
        
         private readonly IDistributedCache distributedCache;
-       
+        private readonly ILogger<NoteController> logger;
 
-        public NoteController(INoteBL noteBL, FundooContext context, IMemoryCache memoryCache, IDistributedCache distributedCache)
+        public NoteController(INoteBL noteBL, FundooContext context, IMemoryCache memoryCache, IDistributedCache distributedCache, ILogger<NoteController> logger)
             {
                 this.noteBL = noteBL;
                 this.context = context;
             this.memoryCache = memoryCache;
             this.distributedCache = distributedCache;
+            this.logger = logger;
         }
         [HttpGet("Get")]
         public IActionResult GetNotes()
         {
             try
             {
+                
                 long userid = Convert.ToInt32(User.Claims.FirstOrDefault(e => e.Type == "UserId").Value);
-                var NotesList = noteBL.GetAllNotes(userid);
-
-                return this.Ok(new { Success = true, message = "Get User Notes Successfully.", Data = NotesList });
+                var result = noteBL.GetAllNotes(userid);
+                if (result != null)
+                {
+                    logger.LogInformation("Get User Notes Successfully");
+                    return this.Ok(new { Success = true, message = "Get User Notes Successfully.", Data = result });
+                }
+                else
+                {
+                    logger.LogInformation("Unable to get note");
+                    return this.BadRequest(new { Success = false, message = "Unable to get note" });
+                }
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                logger.LogError(ex.ToString());
                 throw;
             }
         }
@@ -64,11 +76,13 @@ namespace FundooApplication.Controllers
                 var result = noteBL.AddNote(addnote, userid);
                     if (result != null)
                     {
-                        return this.Ok(new { Success = true, message = "Note Added Successfully", result = result });
+                    logger.LogInformation("Note Added Successfully");
+                    return this.Ok(new { Success = true, message = "Note Added Successfully", result = result });
                     }
                     else
                     {
-                        return this.BadRequest(new { Success = false, message = "Unable to add note" });
+                    logger.LogInformation("Unable to add note");
+                    return this.BadRequest(new { Success = false, message = "Unable to add note" });
                     }
                 }
                 catch (Exception ex)
@@ -86,16 +100,19 @@ namespace FundooApplication.Controllers
 
                 if (result == true)
                 {
+                    logger.LogInformation("Notes Updated SuccessFully");
                     return this.Ok(new { Success = true, message = "Notes Updated SuccessFully", noteid });
                 }
                 else
                 {
+                    logger.LogInformation("Notes updation failed");
                     return this.BadRequest(new { Success = false, message = "Notes updation failed" });
                 }
             }
-            catch (Exception e)
+            catch (Exception ex)
             {
-                return this.BadRequest(new { success = false, message = e.Message, stackTrace = e.StackTrace });
+                logger.LogError(ex.ToString());
+                return this.BadRequest(new { success = false, message = ex.Message, stackTrace = ex.StackTrace });
             }
 
         }
@@ -110,16 +127,19 @@ namespace FundooApplication.Controllers
 
                 if (result == true)
                 {
+                    logger.LogInformation("Notes Deleted SuccessFully");
                     return this.Ok(new { Success = true, message = "Notes Deleted SuccessFully.", noteid });
                 }
                 else
                 {
+                    logger.LogInformation("Notes deletion failed.");
                     return this.BadRequest(new { Success = false, message = "Notes deletion failed." });
                 }
             }
-            catch (Exception e)
+            catch (Exception ex)
             {
-                return this.BadRequest(new { success = false, message = e.Message, stackTrace = e.StackTrace });
+                logger.LogError(ex.ToString());
+                return this.BadRequest(new { success = false, message = ex.Message });
             }
 
         }
@@ -131,16 +151,18 @@ namespace FundooApplication.Controllers
                 var result = noteBL.IsPinORNot(noteid);
                 if (result != null)
                 {
+                    logger.LogInformation("Note Pinned Successfully");
                     return this.Ok(new { message = "Note Pinned Successfully", Response = result });
                 }
                 else
                 {
+                    logger.LogInformation("Something Went Wrong");
                     return this.BadRequest(new { message = "Something Went Wrong" });
                 }
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-
+                logger.LogError(ex.ToString());
                 throw;
             }
         }
@@ -154,16 +176,18 @@ namespace FundooApplication.Controllers
                 var result = noteBL.IstrashORNot(noteid);
                 if (result != null)
                 {
+                    logger.LogInformation("Note is in trash");
                     return this.Ok(new { message = "Note is in trash ", Response = result });
                 }
                 else
                 {
+                    logger.LogInformation("Something Went Wrong");
                     return this.BadRequest(new { message = "Something Went Wrong" });
                 }
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-
+                logger.LogError(ex.ToString());
                 throw;
             }
         }
@@ -177,16 +201,18 @@ namespace FundooApplication.Controllers
                 var result = noteBL.IsArchiveORNot(noteid);
                 if (result != null)
                 {
+                    logger.LogInformation("Note Archived Successfully");
                     return this.Ok(new { message = "Note Archived Successfully ", Response = result });
                 }
                 else
                 {
+                    logger.LogInformation("Something Went Wrong");
                     return this.BadRequest(new { message = "Something Went Wrong" });
                 }
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-
+                logger.LogError(ex.ToString());
                 throw;
             }
         }
@@ -201,16 +227,18 @@ namespace FundooApplication.Controllers
                 var result = noteBL.Color(noteid, color);
                 if (result != null)
                 {
+                    logger.LogInformation("Color is changed ");
                     return this.Ok(new { message = "Color is changed ", Response = result });
                 }
                 else
                 {
+                    logger.LogInformation("Unable to change color");
                     return this.BadRequest(new { message = "Unable to change color" });
                 }
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-
+                logger.LogError(ex.ToString());
                 throw;
             }
         }
@@ -224,16 +252,18 @@ namespace FundooApplication.Controllers
                 var result = noteBL.UploadImage(noteid,userId, img);
                 if (result != null)
                 {
+                    logger.LogInformation("uploaded");
                     return this.Ok(new { message = "uploaded ", Response = result });
                 }
                 else
                 {
+                    logger.LogInformation("Not uploaded");
                     return this.BadRequest(new { message = "Not uploaded" });
                 }
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-
+                logger.LogError(ex.ToString());
                 throw;
             }
         }
