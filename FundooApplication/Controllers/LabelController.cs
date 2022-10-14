@@ -12,6 +12,7 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.Caching.Memory;
 using RepositoryLayer.Context;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 
 namespace FundooApplication.Controllers
 {
@@ -24,15 +25,16 @@ namespace FundooApplication.Controllers
         private readonly IMemoryCache memoryCache;
         FundooContext context;
         private readonly IDistributedCache distributedCache;
+        private readonly ILogger<LabelController> logger;
 
 
-
-        public LabelController(ILabelBL lables, IMemoryCache memoryCache, FundooContext context, IDistributedCache distributedCache)
+        public LabelController(ILabelBL lables, IMemoryCache memoryCache, FundooContext context, IDistributedCache distributedCache, ILogger<LabelController> logger)
         {
             this.lables = lables;
             this.memoryCache = memoryCache;
             this.context = context;
             this.distributedCache = distributedCache;
+            this.logger = logger;
         }
 
         [HttpPost("Add")]
@@ -44,15 +46,18 @@ namespace FundooApplication.Controllers
                 var result = lables.Addlabel(noteid, userid, labels);
                 if (result != null)
                 {
+                    logger.LogInformation("Labels Added Successfully");
                     return this.Ok(new { Success = true, message = "Labels Added Successfully", Response = result });
                 }
                 else
                 {
+                    logger.LogInformation("Unable to add");
                     return this.BadRequest(new { Success = false, message = "Unable to add" });
                 }
             }
             catch (Exception ex)
             {
+                logger.LogError(ex.ToString());
                 return this.BadRequest(new { Success = false, message = ex.Message });
             }
         }
@@ -65,6 +70,7 @@ namespace FundooApplication.Controllers
                 var result = lables.GetlabelsByNoteid(noteid, userID);
                 if (!result.Equals(null))
                 {
+                    logger.LogInformation("Labels by their NoteId");
                     return this.Ok(new
                     {
                         success = true,
@@ -74,6 +80,7 @@ namespace FundooApplication.Controllers
                 }
                 else
                 {
+                    logger.LogInformation("something went wrong");
                     return this.BadRequest(new
                     {
                         success = false,
@@ -81,8 +88,9 @@ namespace FundooApplication.Controllers
                     });
                 }
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                logger.LogError(ex.ToString());
                 throw;
             }
         }
@@ -94,10 +102,12 @@ namespace FundooApplication.Controllers
                 long userID = Convert.ToInt32(User.Claims.FirstOrDefault(e => e.Type == "UserId").Value);
                 if (lables.RemoveLabel(userID, labelid))
                 {
+                    logger.LogInformation("Label removed successfully");
                     return this.Ok(new { success = true, message = "Label removed successfully" });
                 }
                 else
                 {
+                    logger.LogInformation("User access denied");
                     return this.BadRequest(new { success = false, message = "User access denied" });
                 }
             }
@@ -116,15 +126,18 @@ namespace FundooApplication.Controllers
                 var result = lables.RenameLabel(userID, lableName, newLabelName);
                 if (result != null)
                 {
+                    logger.LogInformation("Label renamed successfully");
                     return this.Ok(new { success = true, message = "Label renamed successfully", Response = result });
                 }
                 else
                 {
+                    logger.LogInformation("Unable to rename");
                     return this.BadRequest(new { success = false, message = "Unable to rename" });
                 }
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                logger.LogError(ex.ToString());
                 throw;
             }
         }
